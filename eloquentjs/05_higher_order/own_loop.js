@@ -1,3 +1,10 @@
+/**
+ * 
+ * @param {number} value 
+ * @param {Function} testFunc 
+ * @param {Function} updateFunc 
+ * @param {Function} bodyFunc 
+ */
 function loop(value, testFunc, updateFunc, bodyFunc) {
     for (let index = value; testFunc(index); index = updateFunc(index)) {
         bodyFunc(index);
