@@ -1,5 +1,5 @@
 /**
- * 
+ * Universal "for" loop
  * @param {number} value 
  * @param {Function} testFunc 
  * @param {Function} updateFunc 
