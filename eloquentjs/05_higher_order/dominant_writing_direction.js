@@ -1,17 +1,36 @@
-const higherOrder = require('./higher_order_functions');
+require('./scripts');
+require('./scripts');
+const {countBy, characterScript} = require('./higher_order_functions');
 
+/**
+ * Returns dominant writing direction of text 
+ * @param {string} text 
+ */
 function dominantDirection(text) {
+    let dirCount = countBy(text, chr => {
+        let script = characterScript(chr.codePointAt());
+        
+        return  script === null ? "none" : script.direction;
+    }).filter(({name}) => name !== "none");
 
+    let max = -Infinity;
+    let dominantDir = 'none';
+    for (const {name, count} of dirCount) {
+        if (count > max) {
+            max = count;
+            dominantDir = name;
+        }        
+    }
+
+    return dominantDir;
 }
 
-console.log(higherOrder.countBy([5, 2, 4, 6, 50, 3, 10, 11], elem => {
-    if (elem >= 2 && elem <= 5) {
-        return 'low';
-    }
-    if (elem > 5 && elem <= 11) {
-        return 'middle';
-    }
-    if (elem > 11) {
-        return 'high';
-    }
-}));
+console.log(dominantDirection("Hello!"));
+// → ltr
+console.log(dominantDirection("Hey, مساء الخير"));
+// → rtl
+console.log(dominantDirection("ތާނަřéa"));
+// → rtl because Thaana chars are double chars
+console.log(dominantDirection("Mongolskyᠴᠣᠷᠢ ᠶᠢᠨ ᠭᠠᠭᠴᠠ ᠪᠣᠰᠤᠭ᠎ᠠ ᠪᠢᠴᠢᠭ᠄ ᠮᠣᠩᠭᠣᠯ ᠪᠢᠴᠢᠭ"));
+// → ttb
+console.log(dominantDirection("!"));
