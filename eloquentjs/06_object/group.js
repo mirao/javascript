@@ -3,27 +3,31 @@
  */
 class Group {
     constructor() {
-        this.group = [];
+        this.members = [];
     }
-    
+
+    [Symbol.iterator]() {
+        return new GroupIterator(this.members);
+    }
+        
     add(element) {
         if (!this.has(element)) {
-            this.group.push(element);
+            this.members.push(element);
         }
     }
 
     delete(element) {
-        const id = this.group.indexOf(element);
+        const id = this.members.indexOf(element);
         if (id >= 0) {
-            this.group.splice(id, 1);
+            this.members.splice(id, 1);
             return true;
         } else {
             return false;
-        } 
+        }
     }
 
     has(element) {
-        return this.group.includes(element);
+        return this.members.includes(element);
     }
 
     static from(elements) {
@@ -32,6 +36,21 @@ class Group {
             group.add(element);
         });
         return group;
+    }
+}
+
+class GroupIterator {
+    constructor(members) {
+        this.members = members;
+        this.index = 0;
+    }
+
+    next() {
+        if (this.index == this.members.length) {
+            return {done: true}
+        }
+
+        return {value: this.members[this.index++], done: false};
     }
 }
 
@@ -47,3 +66,10 @@ console.log(group.delete(5));
 // → false
 console.log(group.has(10));
 // → false
+
+for (let value of Group.from(["a", "b", "c"])) {
+    console.log(value);
+}
+  // → a
+  // → b
+  // → c
