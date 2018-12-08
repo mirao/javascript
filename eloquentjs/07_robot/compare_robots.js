@@ -111,6 +111,38 @@ function findRoute(graph, from, to) {
     }
 }
 
+
+function myRobot({ place, parcels }, route) {
+    function findShortestRoute(graph, path, to) {
+        for (const dest of graph[path[path.length - 1]]) {
+            if (dest == to) { // Destination found
+                routes.push(path.concat(to));
+                return;
+            }
+            if (!path.includes(dest)) {
+                findShortestRoute(graph, path.concat(dest), to);
+            };
+        }
+    }
+
+    let routes = [];
+    if (route.length == 0) {
+        parcels.filter(parcel => parcel.place != place).forEach(parcel => {
+            findShortestRoute(roadGraph, [place], parcel.place);
+        });
+        parcels.filter(parcel => parcel.place == place).forEach(parcel => {
+            findShortestRoute(roadGraph, [place], parcel.address);
+        });
+        route = routes[0];
+        routes.forEach(elem => {
+            if (elem.length < route.length) {
+                route = elem;
+            }
+        });
+    }
+    return { direction: route[0], memory: route.slice(1) };
+}
+
 function goalOrientedRobot({ place, parcels }, route) {
     if (route.length == 0) {
         let parcel = parcels[0];
@@ -123,18 +155,52 @@ function goalOrientedRobot({ place, parcels }, route) {
     return { direction: route[0], memory: route.slice(1) };
 }
 
-function compareRobots(robot1, memory1, robot2, memory2) {
+function lazyRobot({ place, parcels }, route) {
+    if (route.length == 0) {
+        // Describe a route for every parcel
+        let routes = parcels.map(parcel => {
+            if (parcel.place != place) {
+                return {
+                    route: findRoute(roadGraph, place, parcel.place),
+                    pickUp: true
+                };
+            } else {
+                return {
+                    route: findRoute(roadGraph, place, parcel.address),
+                    pickUp: false
+                };
+            }
+        });
+
+        // This determines the precedence a route gets when choosing.
+        // Route length counts negatively, routes that pick up a package
+        // get a small bonus.
+        function score({ route, pickUp }) {
+            return (pickUp ? 0.5 : 0) - route.length;
+        }
+        route = routes.reduce((a, b) => score(a) > score(b) ? a : b).route;
+    }
+
+    return { direction: route[0], memory: route.slice(1) };
+}
+
+
+function compareRobots(robot1, memory1, robot2, memory2, robot3, memory3, robot4, memory4, robot5, memory5) {
     const tasksCnt = 100;
-    let sum1 = 0;
-    let sum2 = 0;
+    let sum1 = 0, sum2 = 0, sum3 = 0, sum4 = 0, sum5 = 0;
     for (let i = 0; i < tasksCnt; i++) {
         const state = VillageState.random();
         sum1 += runRobot(state, robot1, memory1);
         sum2 += runRobot(state, robot2, memory2);
+        sum3 += runRobot(state, robot3, memory3);
+        sum4 += runRobot(state, robot4, memory4);
+        sum5 += runRobot(state, robot5, memory5);
     }
-    console.log(`Robot 1: Average ${sum1 / tasksCnt} steps per task`);
-    console.log(`Robot 2: Average ${sum2 / tasksCnt} steps per task`);
+    console.log(`${robot1.name}: Average ${sum1 / tasksCnt} steps per task`);
+    console.log(`${robot2.name}: Average ${sum2 / tasksCnt} steps per task`);
+    console.log(`${robot3.name}: Average ${sum3 / tasksCnt} steps per task`);
+    console.log(`${robot4.name}: Average ${sum4 / tasksCnt} steps per task`);
+    console.log(`${robot5.name}: Average ${sum5 / tasksCnt} steps per task`);
 }
 
-compareRobots(randomRobot, [], routeRobot, []);
-compareRobots(routeRobot, [], goalOrientedRobot, []);
+compareRobots(randomRobot, [], routeRobot, [], goalOrientedRobot, [], myRobot, [], lazyRobot, []);
