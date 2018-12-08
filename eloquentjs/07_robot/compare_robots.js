@@ -133,12 +133,7 @@ function myRobot({ place, parcels }, route) {
         parcels.filter(parcel => parcel.place == place).forEach(parcel => {
             findShortestRoute(roadGraph, [place], parcel.address);
         });
-        route = routes[0];
-        routes.forEach(elem => {
-            if (elem.length < route.length) {
-                route = elem;
-            }
-        });
+        route = routes.reduce((a, b) => a.length < b.length ? a : b);
     }
     return { direction: route[0], memory: route.slice(1) };
 }
