@@ -5,6 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome",
+            "file": "/home/mira/workspace/javascript/eloquentjs/08_error/index.html",
+        },
+        {
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
