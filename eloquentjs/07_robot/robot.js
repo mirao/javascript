@@ -27,7 +27,22 @@ function buildGraph(edges) {
 
 const roadGraph = buildGraph(roads);
 
-console.log(JSON.stringify(roadGraph, null, '\t'));
+console.log(JSON.stringify(roadGraph, null, "\t"));
+
+const {find_path} = require("dijkstrajs");
+
+// Convert graph to graph intended for Dijkstra’s algorithm
+let graph = {};
+for (let node of Object.keys(roadGraph)) {
+    let edges = graph[node] = {};
+    for (let dest of roadGraph[node]) {
+        edges[dest] = 1;
+    }
+}
+
+// Find the shortest path using Dijkstra’s algorithm
+console.log(find_path(graph, "Post Office", "Cabin"));
+// → ["Post Office", "Alice's House", "Cabin"]
 
 class VillageState {
     constructor(place, parcels) {

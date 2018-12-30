@@ -8,7 +8,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome",
-            "file": "/home/mira/workspace/javascript/eloquentjs/08_error/index.html",
+            "file": "/home/mira/workspace/javascript/eloquentjs/10_modules/index.html",
         },
         {
             "type": "node",
