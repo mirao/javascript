@@ -121,18 +121,18 @@ function myRobot({ place, parcels }, route) {
             }
             if (!path.includes(dest)) {
                 findShortestRoute(graph, path.concat(dest), to);
-            };
+            }
         }
     }
 
     let routes = [];
     if (route.length == 0) {
         parcels.forEach(parcel => {
-                if (parcel.place == place) {
-                    findShortestRoute(roadGraph, [place], parcel.address);
-                } else {
-                    findShortestRoute(roadGraph, [place], parcel.place);
-                }
+            if (parcel.place == place) {
+                findShortestRoute(roadGraph, [place], parcel.address);
+            } else {
+                findShortestRoute(roadGraph, [place], parcel.place);
+            }
         });
         route = routes.reduce((a, b) => a.length < b.length ? a : b);
     }
@@ -152,6 +152,12 @@ function goalOrientedRobot({ place, parcels }, route) {
 }
 
 function lazyRobot({ place, parcels }, route) {
+    // This determines the precedence a route gets when choosing.
+    // Route length counts negatively, routes that pick up a package
+    // get a small bonus.
+    function score({ route, pickUp }) {
+        return (pickUp ? 0.5 : 0) - route.length;
+    }
     if (route.length == 0) {
         // Describe a route for every parcel
         let routes = parcels.map(parcel => {
@@ -168,12 +174,6 @@ function lazyRobot({ place, parcels }, route) {
             }
         });
 
-        // This determines the precedence a route gets when choosing.
-        // Route length counts negatively, routes that pick up a package
-        // get a small bonus.
-        function score({ route, pickUp }) {
-            return (pickUp ? 0.5 : 0) - route.length;
-        }
         route = routes.reduce((a, b) => score(a) > score(b) ? a : b).route;
     }
 
