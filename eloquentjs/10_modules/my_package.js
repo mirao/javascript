@@ -4,4 +4,4 @@ export default function() {
     return new Date().getFullYear();
 }
 
-export const parts = ["Winterx", "Spring", "Summer", "Autumn"];
+export const parts = ["Winter", "Spring", "Summer", "Autumn"];
