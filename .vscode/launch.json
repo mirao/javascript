@@ -5,11 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            // First start http-server in folder with index.html
+            "name": "Launch Chrome",
             "type": "chrome",
             "request": "launch",
-            "name": "Launch Chrome",
-            "file": "/home/mira/workspace/javascript/eloquentjs/10_modules/index.html",
-        },
+            "url": "http://127.0.0.1:8080",
+            "webRoot": "${workspaceFolder}/eloquentjs/10_modules"
+        },        
         {
             "type": "node",
             "request": "launch",
