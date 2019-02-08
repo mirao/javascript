@@ -6,7 +6,7 @@ const cache = {
 
 const readStorage = (cache, callback) => {
     const {text} = cache;
-    setTimeout(() => callback(text + 1, 20));
+    setTimeout(() => callback(text + 1), 1000); // Wait a sec
     callback(text + 2);
 };
 
