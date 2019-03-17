@@ -23,16 +23,16 @@ function resolveAfter2Seconds() {
         .then(() => console.log("Promise waiting 2")) // Wait for 2 sec
         .then(() => 
             // Another alternative using callbacks
-            setTimeout(function() {
-                console.log("Callback waiting 1");
-                setTimeout(function() {
-                    console.log("Callback waiting 2");
-                    setTimeout(function() {
-                        console.log("Callback waiting 3");
-                    }, 2000);
-                }, 2000);
-            }, 2000)
+            delay(1)
         );
+    
+    function delay(num) {
+        if (num > 3) return;
+        setTimeout(function() {
+            console.log(`Callback waiting ${num}`);
+            delay(num + 1);
+        }, 2000);
+    }
 })();
 
 console.log("Not really ending .."); // This one doesn't wait at all
