@@ -47,10 +47,11 @@ var slotMachine = {
         reelsPositions.forEach((reels, position) => {
             let output = [];
             reels.forEach((reel, slot) => {
+                let reels = this.reels[slot];
                 if (position === 0) {
-                    reel.position = (this.reels[slot].position + this.reels[slot].symbols.length - 1) % this.reels[slot].symbols.length;
+                    reel.position = (reels.position + reels.symbols.length - 1) % reels.symbols.length;
                 } else if (position === 2) {
-                    reel.position = (this.reels[slot].position + 1) % this.reels[slot].symbols.length;
+                    reel.position = (reels.position + 1) % reels.symbols.length;
                 }
                 output.push(reel.display());
             });
